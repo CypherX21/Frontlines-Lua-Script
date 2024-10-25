@@ -13,14 +13,14 @@ local start = os.clock()
 
 -- Sende eine Benachrichtigung, dass das Skript geladen wird
 game.StarterGui:SetCore("SendNotification", {
-   Title = "TucoT9",
+   Title = "Made by TucoT9 & CypherX21",
    Text = "Der Cheat ist am injecten...",
    Icon = "",
    Duration = 5
 })
 
 -- Laden der ESP-Einheit
-local esp = loadstring(game:HttpGet("https://raw.githubusercontent.com/TucoT9/RUBY-cheat/main/esp.lua"))()
+local esp = loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
 esp:Toggle(true)
 
 -- Konfiguration der ESP-Einstellungen
@@ -153,7 +153,7 @@ end)
 -- FPS-Anzeige erstellen
 local fpsLabel = Instance.new("TextLabel")
 fpsLabel.Size = UDim2.new(0, 100, 0, 50)
-fpsLabel.Position = UDim2.new(0.8, 0, 0, 0)  -- Position oben rechts
+fpsLabel.Position = UDim2.new(0.9, 0, 0, 0)  -- Position oben rechts
 fpsLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 fpsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 fpsLabel.TextScaled = true
@@ -162,23 +162,20 @@ fpsLabel.Parent = game.CoreGui
 fpsLabel.BackgroundTransparency = 0.5  -- Leicht transparent
 
 -- Funktion zur Aktualisierung der FPS-Anzeige
-local lastTick = tick()
-local frameCount = 0
-local updateInterval = 1  -- Interval für die FPS-Aktualisierung in Sekunden
+local lastTime = tick()
+local frames = 0
 
--- Starte die FPS-Anzeige
-task.spawn(function()
-    while true do
-        frameCount = frameCount + 1
-        wait(0.03)  -- Grob 30 FPS
-        if tick() - lastTick >= updateInterval then
-            local fps = frameCount / (tick() - lastTick)
-            fpsLabel.Text = string.format("FPS: %.2f", fps)
-            frameCount = 0
-            lastTick = tick()
-        end
+game:GetService("RunService").RenderStepped:Connect(function()
+    frames = frames + 1
+    local currentTime = tick()
+    if currentTime - lastTime >= 1 then
+        local fps = frames / (currentTime - lastTime)
+        fpsLabel.Text = string.format("FPS: %.0f", fps)
+        frames = 0
+        lastTime = currentTime
     end
 end)
+
 
 -- Speichere die Endzeit, zu der der Code ausgeführt wird
 local finish = os.clock()
@@ -196,7 +193,7 @@ end
 
 -- Sende eine Benachrichtigung, wie lange das Skript zum Laden benötigt hat und dessen Bewertung
 game.StarterGui:SetCore("SendNotification", {
-    Title = "TucoT9",
+    Title = "Made by TucoT9 & CypherX21",
     Text = string.format("Cheat wurde in %.2f Sekunden (%s injected)", time, rating),
     Icon = "",
     Duration = 5
