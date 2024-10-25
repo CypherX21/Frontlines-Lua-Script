@@ -165,17 +165,15 @@ fpsLabel.BackgroundTransparency = 0.5  -- Leicht transparent
 local lastTime = tick()
 local frames = 0
 
-game:GetService("RunService").RenderStepped:Connect(function()
+game:GetService("RunService").Heartbeat:Connect(function(deltaTime)
     frames = frames + 1
-    local currentTime = tick()
-    if currentTime - lastTime >= 1 then
-        local fps = frames / (currentTime - lastTime)
+    if tick() - lastTime >= 1 then
+        local fps = frames / (tick() - lastTime)
         fpsLabel.Text = string.format("FPS: %.0f", fps)
         frames = 0
-        lastTime = currentTime
+        lastTime = tick()
     end
 end)
-
 
 -- Speichere die Endzeit, zu der der Code ausgeführt wird
 local finish = os.clock()
@@ -190,7 +188,6 @@ elseif time < 5 then
 else
     rating = "langsam"
 end
-
 -- Sende eine Benachrichtigung, wie lange das Skript zum Laden benötigt hat und dessen Bewertung
 game.StarterGui:SetCore("SendNotification", {
     Title = "Made by TucoT9 & CypherX21",
