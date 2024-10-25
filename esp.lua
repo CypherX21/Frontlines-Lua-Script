@@ -1,5 +1,5 @@
 --[[ 
-    Erstellt von TucoT9
+    Erstellt von TucoT9 & CypherX21
     Hinweis: Verwenden auf eigene Gefahr!
 ]] 
 
@@ -8,7 +8,7 @@ local ESP = {
     Enabled = false,
     Boxes = true,
     BoxShift = CFrame.new(0,-1.5,0),
-	BoxSize = Vector3.new(4,6,0),
+    BoxSize = Vector3.new(4,6,0),
     Color = Color3.fromRGB(255, 0, 255),  -- Leuchtendes Magenta für Gegner
     FaceCamera = false,
     Names = true,
@@ -33,30 +33,30 @@ local WorldToViewportPoint = cam.WorldToViewportPoint
 
 --Funktionen--
 local function Draw(obj, props)
-	local new = Drawing.new(obj)
-	
-	-- Überträgt Eigenschaften zum gezeichneten Objekt --
-	props = props or {}
-	for i,v in pairs(props) do
-		new[i] = v
-	end
-	return new
+    local new = Drawing.new(obj)
+    
+    -- Überträgt Eigenschaften zum gezeichneten Objekt --
+    props = props or {}
+    for i,v in pairs(props) do
+        new[i] = v
+    end
+    return new
 end
 
 function ESP:GetTeam(p)
-	local ov = self.Overrides.GetTeam
-	if ov then
-		return ov(p)
-	end
-	
-	-- Gibt das Team des Spielers zurück --
-	return p and p.Team
+    local ov = self.Overrides.GetTeam
+    if ov then
+        return ov(p)
+    end
+    
+    -- Gibt das Team des Spielers zurück --
+    return p and p.Team
 end
 
 function ESP:IsTeamMate(p)
     local ov = self.Overrides.IsTeamMate
-	if ov then
-		return ov(p)
+    if ov then
+        return ov(p)
     end
     
     -- Überprüft, ob der Spieler ein Teammitglied ist --
@@ -64,24 +64,24 @@ function ESP:IsTeamMate(p)
 end
 
 function ESP:GetColor(obj)
-	local ov = self.Overrides.GetColor
-	if ov then
-		return ov(obj)
+    local ov = self.Overrides.GetColor
+    if ov then
+        return ov(obj)
     end
     
     -- Bestimmt die Farbe basierend auf dem Team des Spielers --
     local p = self:GetPlrFromChar(obj)
-	return p and self.TeamColor and p.Team and p.Team.TeamColor.Color or self.Color
+    return p and self.TeamColor and p.Team and p.Team.TeamColor.Color or self.Color
 end
 
 function ESP:GetPlrFromChar(char)
-	local ov = self.Overrides.GetPlrFromChar
-	if ov then
-		return ov(char)
-	end
-	
-	-- Holt den Spieler vom Charakter --
-	return plrs:GetPlayerFromCharacter(char)
+    local ov = self.Overrides.GetPlrFromChar
+    if ov then
+        return ov(char)
+    end
+    
+    -- Holt den Spieler vom Charakter --
+    return plrs:GetPlayerFromCharacter(char)
 end
 
 function ESP:Toggle(bool)
@@ -242,7 +242,8 @@ function boxBase:Update()
             
             self.Components.Distance.Visible = true
             self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
-            self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m entfernt"
+            -- Berechne die Entfernung in Metern und zeige sie an
+            self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).Magnitude) .. "m entfernt"
             self.Components.Distance.Color = color
         else
             self.Components.Name.Visible = false
