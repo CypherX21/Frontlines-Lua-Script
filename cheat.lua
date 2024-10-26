@@ -3,6 +3,14 @@
    Skript erstellt von NeonScripting
 ]]
 
+-- Sende eine Benachrichtigung, dass das Skript geladen wird
+game.StarterGui:SetCore("SendNotification", {
+    Title = "Script Laden",
+    Text = "Das Skript wird geladen...",
+    Icon = "",
+    Duration = 5
+})
+
 -- GUI Erstellung
 local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
@@ -270,78 +278,3 @@ else
         Duration = 5
     })
 end
-
--- Original-Code-Teile (angepasst für GUI)
--- Setze Hitbox-Größe, Transparenz-Level
-local size = Vector3.new(25, 25, 25)
-local trans = 1
-
--- ESP Konfiguration
-esp.Boxes = true
-esp.Names = false
-esp.Tracers = false
-esp.Players = false
-
-esp:AddObjectListener(workspace, {
-   Name = "soldier_model",
-   Type = "Model",
-   Color = Color3.fromRGB(255, 0, 0),  -- Leuchtend Rot
-
-   PrimaryPart = function(obj)
-       local root
-       repeat
-           root = obj:FindFirstChild("HumanoidRootPart")
-           task.wait()
-       until root
-       return root
-   end,
-
-   Validator = function(obj)
-       task.wait(1)
-       if obj:FindFirstChild("friendly_marker") then
-           return false
-       end
-       return true
-   end,
-
-   CustomName = "?",
-   IsEnabled = "enemy"
-})
-
-esp.enemy = true
-
--- Restlicher Code
-local start = os.clock()
-task.wait(1)
-
-for _, v in pairs(workspace:GetDescendants()) do
-   if v.Name == "soldier_model" and v:IsA("Model") and not v:FindFirstChild("friendly_marker") then
-       local pos = v:FindFirstChild("HumanoidRootPart").Position
-       for _, bp in pairs(workspace:GetChildren()) do
-           if bp:IsA("BasePart") then
-               local distance = (bp.Position - pos).Magnitude
-               if distance <= 5 then
-                   bp.Transparency = trans
-                   bp.Size = size
-               end
-           end
-       end
-   end
-end
-
-local finish = os.clock()
-local time = finish - start
-local rating
-if time < 3 then
-    rating = "schnell"
-elif time < 5 then
-    rating = "akzeptabel"
-else
-    rating = "langsam"
-end
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Scriptet by NeonScripting",
-    Text = string.format("Cheat wurde in %.2f Sekunden (%s injected)", time, rating),
-    Icon = "",
-    Duration = 5
-})
