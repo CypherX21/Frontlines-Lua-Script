@@ -1,6 +1,6 @@
 --[[ 
    WARNUNG: Dieses Skript wurde nicht von ScriptBlox überprüft. Verwendung auf eigene Gefahr! 
-   Skript erstellt von TucoT9 
+   Skript erstellt von TucoT9 & CypherX21
 ]]
 
 -- Setze Hitbox-Größe, Transparenz-Level und Benachrichtigungsstatus
