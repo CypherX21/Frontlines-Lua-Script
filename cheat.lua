@@ -2,6 +2,34 @@
     Scripted by NeonScripting: WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
 ]]
 
+-- GUI Creation for NeonScripting
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+
+-- Set parent to player's GUI
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Frame properties
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BackgroundTransparency = 0.5
+Frame.Position = UDim2.new(0.5, -100, 0.1, 0)
+Frame.Size = UDim2.new(0, 200, 0, 50)
+Frame.AnchorPoint = Vector2.new(0.5, 0)
+
+-- TextLabel properties
+TextLabel.Parent = Frame
+TextLabel.Text = "Scripted by NeonScripting"
+TextLabel.Font = Enum.Font.SourceSansBold
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 18
+TextLabel.Size = UDim2.new(1, 0, 1, 0)
+TextLabel.TextScaled = true
+TextLabel.BackgroundTransparency = 1
+
+-- Original Script Below
+
 -- Set hitbox size, transparency level, and notification status
 local size = Vector3.new(10, 10, 10)
 local trans = 1
@@ -124,7 +152,7 @@ local time = finish - start
 local rating
 if time < 3 then
    rating = "fast"
-elseif time < 5 then
+elif time < 5 then
    rating = "acceptable"
 else
    rating = "slow"
