@@ -1,5 +1,5 @@
 --[[ 
-    Erstellt von TucoT9 & CypherX21
+    Erstellt von NeonScripting
     Hinweis: Verwenden auf eigene Gefahr!
 ]] 
 
