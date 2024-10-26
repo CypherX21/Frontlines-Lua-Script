@@ -11,6 +11,30 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 5
 })
 
+-- ESP Laden
+local success, esp = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
+end)
+
+if success and esp then
+    esp:Toggle(true)  -- ESP wird automatisch aktiviert
+    print("ESP wurde erfolgreich geladen.")
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "ESP",
+        Text = "ESP wurde erfolgreich geladen und aktiviert!",
+        Icon = "",
+        Duration = 5
+    })
+else
+    print("Fehler beim Laden des ESP-Skripts.")
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "ESP Fehler",
+        Text = "Fehler beim Laden des ESP-Skripts.",
+        Icon = "",
+        Duration = 5
+    })
+end
+
 -- GUI Erstellung
 local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
@@ -215,21 +239,3 @@ end
 
 NotificationToggle.MouseButton1Click:Connect(toggleNotifications)
 NotificationKnob.MouseButton1Click:Connect(toggleNotifications)
-
--- ESP Laden
-local success, esp = pcall(function()
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
-end)
-
-if success and esp then
-    esp:Toggle(true)  -- ESP wird automatisch aktiviert
-    print("ESP wurde erfolgreich geladen.")
-else
-    print("Fehler beim Laden des ESP-Skripts.")
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "ESP Fehler",
-        Text = "Fehler beim Laden des ESP-Skripts.",
-        Icon = "",
-        Duration = 5
-    })
-end
