@@ -239,6 +239,9 @@ game:GetService("RunService").Heartbeat:Connect(function(deltaTime)
     end
 end)
 
+-- Laden des ESP-Skripts
+local esp = loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
+
 -- Original-Code-Teile (angepasst für GUI)
 -- Setze Hitbox-Größe, Transparenz-Level
 local size = Vector3.new(25, 25, 25)
