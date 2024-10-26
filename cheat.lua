@@ -5,33 +5,28 @@
 -- GUI Creation for NeonScripting
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
-local ImageLabel = Instance.new("ImageLabel")
+local TextLabel = Instance.new("TextLabel")
 
 -- Set parent to player's GUI
-local player = game.Players.LocalPlayer
-if player and player:FindFirstChild("PlayerGui") then
-    ScreenGui.Parent = player:WaitForChild("PlayerGui")
-else
-    if game:GetService("RunService"):IsStudio() then
-        ScreenGui.Parent = game.CoreGui -- Fallback to CoreGui if PlayerGui isn't available (only for testing in Studio)
-    else
-        warn("Unable to set GUI Parent: PlayerGui not available and CoreGui not accessible in live games.")
-    end
-end
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
 -- Frame properties
 Frame.Parent = ScreenGui
 Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Frame.BackgroundTransparency = 0.5
 Frame.Position = UDim2.new(0.5, -100, 0.1, 0)
-Frame.Size = UDim2.new(0, 200, 0, 150)
+Frame.Size = UDim2.new(0, 200, 0, 50)
 Frame.AnchorPoint = Vector2.new(0.5, 0)
 
--- ImageLabel properties
-ImageLabel.Parent = Frame
-ImageLabel.Image = "rbxassetid://123456789" -- Ersetze durch die korrekte Asset-ID
-ImageLabel.Size = UDim2.new(1, 0, 1, 0)
-ImageLabel.BackgroundTransparency = 1
+-- TextLabel properties
+TextLabel.Parent = Frame
+TextLabel.Text = "Scripted by NeonScripting"
+TextLabel.Font = Enum.Font.SourceSansBold
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 18
+TextLabel.Size = UDim2.new(1, 0, 1, 0)
+TextLabel.TextScaled = true
+TextLabel.BackgroundTransparency = 1
 
 -- Original Script Below
 
@@ -52,15 +47,7 @@ game.StarterGui:SetCore("SendNotification", {
 })
 
 -- Load the ESP library and turn it on
-local success, esp = pcall(function()
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
-end)
-
-if not success then
-    warn("ESP-Bibliothek konnte nicht geladen werden.")
-    return
-end
-
+local esp = loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
 esp:Toggle(true)
 
 -- Configure ESP settings
@@ -110,16 +97,13 @@ task.wait(1)
 -- Apply hitboxes to all existing enemy models in the workspace
 for _, v in pairs(workspace:GetDescendants()) do
    if v.Name == "soldier_model" and v:IsA("Model") and not v:FindFirstChild("friendly_marker") then
-       local humanoidRootPart = v:FindFirstChild("HumanoidRootPart")
-       if humanoidRootPart then
-           local pos = humanoidRootPart.Position
-           for _, bp in pairs(workspace:GetChildren()) do
-               if bp:IsA("BasePart") then
-                   local distance = (bp.Position - pos).Magnitude
-                   if distance <= 5 then
-                       bp.Transparency = trans
-                       bp.Size = size
-                   end
+       local pos = v:FindFirstChild("HumanoidRootPart").Position
+       for _, bp in pairs(workspace:GetChildren()) do
+           if bp:IsA("BasePart") then
+               local distance = (bp.Position - pos).Magnitude
+               if distance <= 5 then
+                   bp.Transparency = trans
+                   bp.Size = size
                end
            end
        end
@@ -142,16 +126,13 @@ local function handleDescendantAdded(descendant)
        end
 
        -- Apply hitboxes to the new enemy model
-       local humanoidRootPart = descendant:FindFirstChild("HumanoidRootPart")
-       if humanoidRootPart then
-           local pos = humanoidRootPart.Position
-           for _, bp in pairs(workspace:GetChildren()) do
-               if bp:IsA("BasePart") then
-                   local distance = (bp.Position - pos).Magnitude
-                   if distance <= 5 then
-                       bp.Transparency = trans
-                       bp.Size = size
-                   end
+       local pos = descendant:FindFirstChild("HumanoidRootPart").Position
+       for _, bp in pairs(workspace:GetChildren()) do
+           if bp:IsA("BasePart") then
+               local distance = (bp.Position - pos).Magnitude
+               if distance <= 5 then
+                   bp.Transparency = trans
+                   bp.Size = size
                end
            end
        end
@@ -171,7 +152,7 @@ local time = finish - start
 local rating
 if time < 3 then
    rating = "fast"
-elseif time < 5 then
+elif time < 5 then
    rating = "acceptable"
 else
    rating = "slow"
