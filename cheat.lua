@@ -1,5 +1,5 @@
 --[[
-	Scripted by NeonScripting: WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
+    Scripted by NeonScripting: WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
 ]]
 
 -- Set hitbox size, transparency level, and notification status
@@ -124,7 +124,7 @@ local time = finish - start
 local rating
 if time < 3 then
    rating = "fast"
-elif time < 5 then
+elseif time < 5 then
    rating = "acceptable"
 else
    rating = "slow"
