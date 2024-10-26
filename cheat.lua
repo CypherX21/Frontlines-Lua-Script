@@ -8,10 +8,10 @@ local Frame = Instance.new("Frame")
 local ImageLabel = Instance.new("ImageLabel")
 
 -- Set parent to player's GUI
-if game.Players.LocalPlayer:FindFirstChild("PlayerGui") then
+if game.Players.LocalPlayer and game.Players.LocalPlayer:FindFirstChild("PlayerGui") then
     ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 else
-    ScreenGui.Parent = game.CoreGui  -- Fallback to CoreGui if PlayerGui isn't available
+    -- ScreenGui.Parent = game.CoreGui -- Fallback removed due to possible permission issues  -- Fallback to CoreGui if PlayerGui isn't available
 end
 
 -- Frame properties
@@ -24,7 +24,7 @@ Frame.AnchorPoint = Vector2.new(0.5, 0)
 
 -- ImageLabel properties
 ImageLabel.Parent = Frame
-ImageLabel.Image = "https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/NeonScripting%20(1).png" -- Replace <YourImageAssetID> with the appropriate asset ID for the uploaded image
+ImageLabel.Image = "rbxassetid://100127782239711" -- Replace <YourImageAssetID> with the appropriate asset ID for the uploaded image
 ImageLabel.Size = UDim2.new(1, 0, 1, 0)
 ImageLabel.BackgroundTransparency = 1
 
@@ -165,4 +165,3 @@ game.StarterGui:SetCore("SendNotification", {
    Icon = "",
    Duration = 5
 })
-
