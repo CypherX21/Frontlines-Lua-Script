@@ -1,360 +1,318 @@
 --[[ 
-    Erstellt von TucoT9 & CypherX21
-    Hinweis: Verwenden auf eigene Gefahr!
-]] 
+   WARNUNG: Dieses Skript wurde nicht von ScriptBlox überprüft. Verwendung auf eigene Gefahr! 
+   Skript erstellt von NeonScripting
+]]
 
---Settings--
-local ESP = {
-    Enabled = false,
-    Boxes = true,
-    BoxShift = CFrame.new(0,-1.5,0),
-    BoxSize = Vector3.new(4,6,0),
-    Color = Color3.fromRGB(255, 0, 255),  -- Leuchtendes Magenta für Gegner
-    FaceCamera = false,
-    Names = true,
-    TeamColor = true,
-    Thickness = 2,
-    AttachShift = 1,
-    TeamMates = true,
-    Players = true,
-    
-    Objects = setmetatable({}, {__mode="kv"}),
-    Overrides = {}
-}
+-- GUI Erstellung
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local TitleLabel = Instance.new("TextLabel")
+local GodModeButton = Instance.new("TextButton")
+local GodModeLever = Instance.new("Frame")
+local GodModeKnob = Instance.new("TextButton")
+local NotificationToggle = Instance.new("TextButton")
+local NotificationLever = Instance.new("Frame")
+local NotificationKnob = Instance.new("TextButton")
+local EspToggle = Instance.new("TextButton")
+local EspLever = Instance.new("Frame")
+local EspKnob = Instance.new("TextButton")
+local FpsLabel = Instance.new("TextLabel")
+local MinimizeButton = Instance.new("TextButton")
+local MinimizedCircle = Instance.new("TextButton")
 
---Deklarationen--
-local cam = workspace.CurrentCamera
-local plrs = game:GetService("Players")
-local plr = plrs.LocalPlayer
-local mouse = plr:GetMouse()
+-- Einstellungen für die GUI
+ScreenGui.Name = "NeonScriptingGUI"
+ScreenGui.Parent = game.CoreGui
 
-local V3new = Vector3.new
-local WorldToViewportPoint = cam.WorldToViewportPoint
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+MainFrame.Size = UDim2.new(0, 300, 0, 500)
+MainFrame.Position = UDim2.new(0.1, 0, 0.1, 0)
+MainFrame.Active = true
+MainFrame.Draggable = true
 
---Funktionen--
-local function Draw(obj, props)
-    local new = Drawing.new(obj)
-    
-    -- Überträgt Eigenschaften zum gezeichneten Objekt --
-    props = props or {}
-    for i,v in pairs(props) do
-        new[i] = v
-    end
-    return new
-end
+TitleLabel.Name = "TitleLabel"
+TitleLabel.Parent = MainFrame
+TitleLabel.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+TitleLabel.Size = UDim2.new(0, 300, 0, 50)
+TitleLabel.Position = UDim2.new(0, 0, 0, 0)
+TitleLabel.Text = "NeonScripting Cheat Menu"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextScaled = true
 
-function ESP:GetTeam(p)
-    local ov = self.Overrides.GetTeam
-    if ov then
-        return ov(p)
-    end
-    
-    -- Gibt das Team des Spielers zurück --
-    return p and p.Team
-end
+GodModeButton.Name = "GodModeButton"
+GodModeButton.Parent = MainFrame
+GodModeButton.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+GodModeButton.Position = UDim2.new(0, 10, 0, 70)
+GodModeButton.Size = UDim2.new(0, 280, 0, 50)
+GodModeButton.Text = "Toggle Godmode"
+GodModeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+GodModeButton.TextScaled = true
 
-function ESP:IsTeamMate(p)
-    local ov = self.Overrides.IsTeamMate
-    if ov then
-        return ov(p)
-    end
-    
-    -- Überprüft, ob der Spieler ein Teammitglied ist --
-    return self:GetTeam(p) == self:GetTeam(plr)
-end
+GodModeLever.Name = "GodModeLever"
+GodModeLever.Parent = MainFrame
+GodModeLever.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+GodModeLever.Position = UDim2.new(0, 10, 0, 130)
+GodModeLever.Size = UDim2.new(0, 60, 0, 30)
 
-function ESP:GetColor(obj)
-    local ov = self.Overrides.GetColor
-    if ov then
-        return ov(obj)
-    end
-    
-    -- Bestimmt die Farbe basierend auf dem Team des Spielers --
-    local p = self:GetPlrFromChar(obj)
-    return p and self.TeamColor and p.Team and p.Team.TeamColor.Color or self.Color
-end
+GodModeKnob.Name = "GodModeKnob"
+GodModeKnob.Parent = GodModeLever
+GodModeKnob.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+GodModeKnob.Size = UDim2.new(0, 30, 0, 30)
+GodModeKnob.Position = UDim2.new(0, 0, 0, 0)
+GodModeKnob.Text = ""
 
-function ESP:GetPlrFromChar(char)
-    local ov = self.Overrides.GetPlrFromChar
-    if ov then
-        return ov(char)
-    end
-    
-    -- Holt den Spieler vom Charakter --
-    return plrs:GetPlayerFromCharacter(char)
-end
+NotificationToggle.Name = "NotificationToggle"
+NotificationToggle.Parent = MainFrame
+NotificationToggle.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+NotificationToggle.Position = UDim2.new(0, 10, 0, 170)
+NotificationToggle.Size = UDim2.new(0, 280, 0, 50)
+NotificationToggle.Text = "Toggle Notifications"
+NotificationToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+NotificationToggle.TextScaled = true
 
-function ESP:Toggle(bool)
-    -- Schaltet die ESP-Funktion ein oder aus --
-    self.Enabled = bool
-    if not bool then
-        for i,v in pairs(self.Objects) do
-            if v.Type == "Box" then --FOV-Kreis usw.
-                if v.Temporary then
-                    v:Remove()
-                else
-                    for i,v in pairs(v.Components) do
-                        v.Visible = false
-                    end
-                end
-            end
-        end
-    end
-end
+NotificationLever.Name = "NotificationLever"
+NotificationLever.Parent = MainFrame
+NotificationLever.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+NotificationLever.Position = UDim2.new(0, 10, 0, 230)
+NotificationLever.Size = UDim2.new(0, 60, 0, 30)
 
-function ESP:GetBox(obj)
-    return self.Objects[obj]
-end
+NotificationKnob.Name = "NotificationKnob"
+NotificationKnob.Parent = NotificationLever
+NotificationKnob.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+NotificationKnob.Size = UDim2.new(0, 30, 0, 30)
+NotificationKnob.Position = UDim2.new(0, 0, 0, 0)
+NotificationKnob.Text = ""
 
-function ESP:AddObjectListener(parent, options)
-    local function NewListener(c)
-        if type(options.Type) == "string" and c:IsA(options.Type) or options.Type == nil then
-            if type(options.Name) == "string" and c.Name == options.Name or options.Name == nil then
-                if not options.Validator or options.Validator(c) then
-                    local box = ESP:Add(c, {
-                        PrimaryPart = type(options.PrimaryPart) == "string" and c:WaitForChild(options.PrimaryPart) or type(options.PrimaryPart) == "function" and options.PrimaryPart(c),
-                        Color = type(options.Color) == "function" and options.Color(c) or options.Color,
-                        ColorDynamic = options.ColorDynamic,
-                        Name = type(options.CustomName) == "function" and options.CustomName(c) or options.CustomName,
-                        IsEnabled = options.IsEnabled,
-                        RenderInNil = options.RenderInNil
-                    })
-                    --TODO: add a better way of passing options
-                    if options.OnAdded then
-                        coroutine.wrap(options.OnAdded)(box)
-                    end
-                end
-            end
-        end
-    end
+EspToggle.Name = "EspToggle"
+EspToggle.Parent = MainFrame
+EspToggle.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+EspToggle.Position = UDim2.new(0, 10, 0, 270)
+EspToggle.Size = UDim2.new(0, 280, 0, 50)
+EspToggle.Text = "Toggle ESP"
+EspToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+EspToggle.TextScaled = true
 
-    if options.Recursive then
-        parent.DescendantAdded:Connect(NewListener)
-        for i,v in pairs(parent:GetDescendants()) do
-            coroutine.wrap(NewListener)(v)
-        end
+EspLever.Name = "EspLever"
+EspLever.Parent = MainFrame
+EspLever.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+EspLever.Position = UDim2.new(0, 10, 0, 330)
+EspLever.Size = UDim2.new(0, 60, 0, 30)
+
+EspKnob.Name = "EspKnob"
+EspKnob.Parent = EspLever
+EspKnob.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+EspKnob.Size = UDim2.new(0, 30, 0, 30)
+EspKnob.Position = UDim2.new(0, 0, 0, 0)
+EspKnob.Text = ""
+
+FpsLabel.Name = "FpsLabel"
+FpsLabel.Parent = MainFrame
+FpsLabel.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+FpsLabel.Position = UDim2.new(0, 10, 0, 370)
+FpsLabel.Size = UDim2.new(0, 280, 0, 50)
+FpsLabel.Text = "FPS: 0"
+FpsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+FpsLabel.TextScaled = true
+
+MinimizeButton.Name = "MinimizeButton"
+MinimizeButton.Parent = MainFrame
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+MinimizeButton.Position = UDim2.new(0, 260, 0, 0)
+MinimizeButton.Size = UDim2.new(0, 40, 0, 40)
+MinimizeButton.Text = "-"
+MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizeButton.TextScaled = true
+
+MinimizedCircle.Name = "MinimizedCircle"
+MinimizedCircle.Parent = ScreenGui
+MinimizedCircle.BackgroundTransparency = 1
+MinimizedCircle.Size = UDim2.new(0, 100, 0, 100)
+MinimizedCircle.Position = UDim2.new(0.05, 0, 0.05, 0)
+MinimizedCircle.Text = "NeonScripting"
+MinimizedCircle.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizedCircle.TextScaled = true
+MinimizedCircle.Visible = false
+MinimizedCircle.Active = true
+MinimizedCircle.Draggable = true
+
+local minimized = false
+
+-- Minimieren und Maximieren der GUI
+local function minimizeGui()
+    minimized = not minimized
+    if minimized then
+        MainFrame.Visible = false
+        MinimizedCircle.Visible = true
     else
-        parent.ChildAdded:Connect(NewListener)
-        for i,v in pairs(parent:GetChildren()) do
-            coroutine.wrap(NewListener)(v)
-        end
+        MainFrame.Visible = true
+        MinimizedCircle.Visible = false
     end
 end
 
-local boxBase = {}
-boxBase.__index = boxBase
+MinimizeButton.MouseButton1Click:Connect(minimizeGui)
+MinimizedCircle.MouseButton1Click:Connect(minimizeGui)
 
-function boxBase:Remove()
-    ESP.Objects[self.Object] = nil
-    for i,v in pairs(self.Components) do
-        v.Visible = false
-        v:Remove()
-        self.Components[i] = nil
+-- Godmode-Funktionalität
+local godModeEnabled = false
+
+local function toggleGodMode()
+    godModeEnabled = not godModeEnabled
+    if godModeEnabled then
+        game.Players.LocalPlayer.Character.Humanoid.MaxHealth = math.huge
+        game.Players.LocalPlayer.Character.Humanoid.Health = math.huge
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Godmode",
+            Text = "Godmode aktiviert!",
+            Icon = "",
+            Duration = 5
+        })
+        GodModeButton.Text = "Godmode deaktivieren"
+        GodModeKnob.Position = UDim2.new(0, 30, 0, 0)
+        GodModeKnob.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    else
+        game.Players.LocalPlayer.Character.Humanoid.MaxHealth = 100
+        game.Players.LocalPlayer.Character.Humanoid.Health = 100
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Godmode",
+            Text = "Godmode deaktiviert!",
+            Icon = "",
+            Duration = 5
+        })
+        GodModeButton.Text = "Godmode aktivieren"
+        GodModeKnob.Position = UDim2.new(0, 0, 0, 0)
+        GodModeKnob.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
     end
 end
 
-function boxBase:Update()
-    if not self.PrimaryPart then
-        --warn("not supposed to print", self.Object)
-        return self:Remove()
-    end
+GodModeButton.MouseButton1Click:Connect(toggleGodMode)
+GodModeKnob.MouseButton1Click:Connect(toggleGodMode)
 
-    local color
-    if ESP.Highlighted == self.Object then
-       color = ESP.HighlightColor
+-- Toggle Notifications
+local notifications = false
+
+local function toggleNotifications()
+    notifications = not notifications
+    if notifications then
+        NotificationToggle.Text = "Benachrichtigungen ausschalten"
+        NotificationKnob.Position = UDim2.new(0, 30, 0, 0)
+        NotificationKnob.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
     else
-        color = self.Color or self.ColorDynamic and self:ColorDynamic() or ESP:GetColor(self.Object) or ESP.Color
-    end
-
-    local allow = true
-    if ESP.Overrides.UpdateAllow and not ESP.Overrides.UpdateAllow(self) then
-        allow = false
-    end
-    if self.Player and not ESP.TeamMates and ESP:IsTeamMate(self.Player) then
-        allow = false
-    end
-    if self.Player and not ESP.Players then
-        allow = false
-    end
-    if self.IsEnabled and (type(self.IsEnabled) == "string" and not ESP[self.IsEnabled] or type(self.IsEnabled) == "function" and not self:IsEnabled()) then
-        allow = false
-    end
-    if not workspace:IsAncestorOf(self.PrimaryPart) and not self.RenderInNil then
-        allow = false
-    end
-
-    if not allow then
-        for i,v in pairs(self.Components) do
-            v.Visible = false
-        end
-        return
-    end
-
-    if ESP.Highlighted == self.Object then
-        color = ESP.HighlightColor
-    end
-
-    -- Berechnungen --
-    local cf = self.PrimaryPart.CFrame
-    if ESP.FaceCamera then
-        cf = CFrame.new(cf.p, cam.CFrame.p)
-    end
-    local size = self.Size
-    local locs = {
-        TopLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,size.Y/2,0),
-        TopRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,size.Y/2,0),
-        BottomLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,-size.Y/2,0),
-        BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,-size.Y/2,0),
-        TagPos = cf * ESP.BoxShift * CFrame.new(0,size.Y/2,0),
-        Torso = cf * ESP.BoxShift
-    }
-
-    if ESP.Boxes then
-        local TopLeft, Vis1 = WorldToViewportPoint(cam, locs.TopLeft.p)
-        local TopRight, Vis2 = WorldToViewportPoint(cam, locs.TopRight.p)
-        local BottomLeft, Vis3 = WorldToViewportPoint(cam, locs.BottomLeft.p)
-        local BottomRight, Vis4 = WorldToViewportPoint(cam, locs.BottomRight.p)
-
-        if self.Components.Quad then
-            if Vis1 or Vis2 or Vis3 or Vis4 then
-                self.Components.Quad.Visible = true
-                self.Components.Quad.PointA = Vector2.new(TopRight.X, TopRight.Y)
-                self.Components.Quad.PointB = Vector2.new(TopLeft.X, TopLeft.Y)
-                self.Components.Quad.PointC = Vector2.new(BottomLeft.X, BottomLeft.Y)
-                self.Components.Quad.PointD = Vector2.new(BottomRight.X, BottomRight.Y)
-                self.Components.Quad.Color = color
-            else
-                self.Components.Quad.Visible = false
-            end
-        end
-    else
-        self.Components.Quad.Visible = false
-    end
-
-    if ESP.Names then
-        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
-        
-        if Vis5 then
-            self.Components.Name.Visible = true
-            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
-            self.Components.Name.Text = self.Name
-            self.Components.Name.Color = color
-            
-            self.Components.Distance.Visible = true
-            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
-            -- Berechne die Entfernung in Metern und zeige sie an
-            self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).Magnitude) .. "m entfernt"
-            self.Components.Distance.Color = color
-        else
-            self.Components.Name.Visible = false
-            self.Components.Distance.Visible = false
-        end
-    else
-        self.Components.Name.Visible = false
-        self.Components.Distance.Visible = false
-    end
-    
-    if ESP.Tracers then
-        local TorsoPos, Vis6 = WorldToViewportPoint(cam, locs.Torso.p)
-
-        if Vis6 then
-            self.Components.Tracer.Visible = true
-            self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
-            self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
-            self.Components.Tracer.Color = color
-        else
-            self.Components.Tracer.Visible = false
-        end
-    else
-        self.Components.Tracer.Visible = false
+        NotificationToggle.Text = "Benachrichtigungen einschalten"
+        NotificationKnob.Position = UDim2.new(0, 0, 0, 0)
+        NotificationKnob.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
     end
 end
 
-function ESP:Add(obj, options)
-    if not obj.Parent then
-        return
+NotificationToggle.MouseButton1Click:Connect(toggleNotifications)
+NotificationKnob.MouseButton1Click:Connect(toggleNotifications)
+
+-- Toggle ESP
+local function toggleEsp()
+    esp:Toggle(not esp.Enabled)
+    if esp.Enabled then
+        EspToggle.Text = "ESP ausschalten"
+        EspKnob.Position = UDim2.new(0, 30, 0, 0)
+        EspKnob.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    else
+        EspToggle.Text = "ESP einschalten"
+        EspKnob.Position = UDim2.new(0, 0, 0, 0)
+        EspKnob.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
     end
-
-    local box = setmetatable({
-        Name = options.Name or obj.Name,
-        Type = "Box",
-        Color = options.Color,
-        Size = options.Size or self.BoxSize,
-        Object = obj,
-        PrimaryPart = options.PrimaryPart or obj.PrimaryPart or obj:FindFirstChildWhichIsA("BasePart"),
-        Components = {},
-        IsEnabled = options.IsEnabled,
-        Player = self:GetPlrFromChar(obj),
-        ColorDynamic = options.ColorDynamic,
-        RenderInNil = options.RenderInNil
-    }, boxBase)
-
-    if self:GetBox(obj) then
-        self:GetBox(obj):Remove()
-    end
-
-    box.Components["Quad"] = Draw("Quad", {
-        Thickness = self.Thickness,
-        Color = color,
-        Transparency = 1,
-        Filled = false,
-        Visible = self.Enabled and self.Boxes
-    })
-
-    box.Components["Name"] = Draw("Text", {
-        Text = box.Name,
-        Color = color,
-        Center = true,
-        Outline = true,
-        Size = 19,
-        Visible = self.Enabled and self.Names
-    })
-
-    box.Components["Distance"] = Draw("Text", {
-        Color = color,
-        Center = true,
-        Outline = true,
-        Size = 19,
-        Visible = self.Enabled and self.Names
-    })
-
-    box.Components["Tracer"] = Draw("Line", {
-        Thickness = self.Thickness,
-        Color = color,
-        Transparency = 1,
-        Visible = self.Enabled and self.Tracers
-    })
-
-    self.Objects[obj] = box
-    obj.AncestryChanged:Connect(function(_, parent)
-        if not parent then
-            box:Remove()
-        end
-    end)
-    obj:GetPropertyChangedSignal("Parent"):Connect(function()
-        if not obj.Parent then
-            box:Remove()
-        end
-    end)
-
-    local hum = obj:FindFirstChildOfClass("Humanoid")
-    if hum then
-        hum.Died:Connect(function()
-            box:Remove()
-        end)
-    end
-
-    return box
 end
 
-game:GetService("RunService").RenderStepped:Connect(function()
-    if ESP.Enabled then
-        for _,v in pairs(ESP.Objects) do
-            if v.Update then
-                pcall(v.Update, v)
-            end
-        end
+EspToggle.MouseButton1Click:Connect(toggleEsp)
+EspKnob.MouseButton1Click:Connect(toggleEsp)
+
+-- FPS-Anzeige erstellen
+local lastTime = tick()
+local frames = 0
+
+game:GetService("RunService").Heartbeat:Connect(function(deltaTime)
+    frames = frames + 1
+    if tick() - lastTime >= 1 then
+        local fps = frames / (tick() - lastTime)
+        FpsLabel.Text = string.format("FPS: %.0f", fps)
+        frames = 0
+        lastTime = tick()
     end
 end)
 
-return ESP
+-- Laden des ESP-Skripts
+local esp = loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
+
+-- Original-Code-Teile (angepasst für GUI)
+-- Setze Hitbox-Größe, Transparenz-Level
+local size = Vector3.new(25, 25, 25)
+local trans = 1
+
+-- ESP Konfiguration
+esp.Boxes = true
+esp.Names = false
+esp.Tracers = false
+esp.Players = false
+
+esp:AddObjectListener(workspace, {
+   Name = "soldier_model",
+   Type = "Model",
+   Color = Color3.fromRGB(255, 0, 0),  -- Leuchtend Rot
+
+   PrimaryPart = function(obj)
+       local root
+       repeat
+           root = obj:FindFirstChild("HumanoidRootPart")
+           task.wait()
+       until root
+       return root
+   end,
+
+   Validator = function(obj)
+       task.wait(1)
+       if obj:FindFirstChild("friendly_marker") then
+           return false
+       end
+       return true
+   end,
+
+   CustomName = "?",
+   IsEnabled = "enemy"
+})
+
+esp.enemy = true
+
+-- Restlicher Code
+local start = os.clock()
+task.wait(1)
+
+for _, v in pairs(workspace:GetDescendants()) do
+   if v.Name == "soldier_model" and v:IsA("Model") and not v:FindFirstChild("friendly_marker") then
+       local pos = v:FindFirstChild("HumanoidRootPart").Position
+       for _, bp in pairs(workspace:GetChildren()) do
+           if bp:IsA("BasePart") then
+               local distance = (bp.Position - pos).Magnitude
+               if distance <= 5 then
+                   bp.Transparency = trans
+                   bp.Size = size
+               end
+           end
+       end
+   end
+end
+
+local finish = os.clock()
+local time = finish - start
+local rating
+if time < 3 then
+    rating = "schnell"
+elif time < 5 then
+    rating = "akzeptabel"
+else
+    rating = "langsam"
+end
+game.StarterGui:SetCore("SendNotification", {
+    Title = "Scriptet by NeonScripting",
+    Text = string.format("Cheat wurde in %.2f Sekunden (%s injected)", time, rating),
+    Icon = "",
+    Duration = 5
+})
