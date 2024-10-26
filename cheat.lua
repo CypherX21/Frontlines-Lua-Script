@@ -5,28 +5,28 @@
 -- GUI Creation for NeonScripting
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
-local TextLabel = Instance.new("TextLabel")
+local ImageLabel = Instance.new("ImageLabel")
 
 -- Set parent to player's GUI
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+if game.Players.LocalPlayer:FindFirstChild("PlayerGui") then
+    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+else
+    ScreenGui.Parent = game.CoreGui  -- Fallback to CoreGui if PlayerGui isn't available
+end
 
 -- Frame properties
 Frame.Parent = ScreenGui
 Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Frame.BackgroundTransparency = 0.5
 Frame.Position = UDim2.new(0.5, -100, 0.1, 0)
-Frame.Size = UDim2.new(0, 200, 0, 50)
+Frame.Size = UDim2.new(0, 200, 0, 150)
 Frame.AnchorPoint = Vector2.new(0.5, 0)
 
--- TextLabel properties
-TextLabel.Parent = Frame
-TextLabel.Text = "Scripted by NeonScripting"
-TextLabel.Font = Enum.Font.SourceSansBold
-TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.TextSize = 18
-TextLabel.Size = UDim2.new(1, 0, 1, 0)
-TextLabel.TextScaled = true
-TextLabel.BackgroundTransparency = 1
+-- ImageLabel properties
+ImageLabel.Parent = Frame
+ImageLabel.Image = "https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/NeonScripting%20(1).png" -- Replace <YourImageAssetID> with the appropriate asset ID for the uploaded image
+ImageLabel.Size = UDim2.new(1, 0, 1, 0)
+ImageLabel.BackgroundTransparency = 1
 
 -- Original Script Below
 
