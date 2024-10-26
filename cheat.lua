@@ -239,8 +239,37 @@ game:GetService("RunService").Heartbeat:Connect(function(deltaTime)
     end
 end)
 
+-- ESP-Skript wird geladen
+print("ESP-Skript wird geladen...")
+game.StarterGui:SetCore("SendNotification", {
+    Title = "ESP Laden",
+    Text = "ESP-Skript wird geladen...",
+    Icon = "",
+    Duration = 5
+})
+
 -- Laden des ESP-Skripts
-local esp = loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
+local success, esp = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
+end)
+
+if success then
+    print("ESP-Skript erfolgreich geladen!")
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "ESP Laden",
+        Text = "ESP-Skript erfolgreich geladen!",
+        Icon = "",
+        Duration = 5
+    })
+else
+    print("Fehler beim Laden des ESP-Skripts.")
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "ESP Fehler",
+        Text = "Fehler beim Laden des ESP-Skripts.",
+        Icon = "",
+        Duration = 5
+    })
+end
 
 -- Original-Code-Teile (angepasst für GUI)
 -- Setze Hitbox-Größe, Transparenz-Level
