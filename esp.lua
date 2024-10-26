@@ -4,7 +4,7 @@ local ESP = {
     Boxes = true,
     BoxShift = CFrame.new(0, -1.5, 0),
     BoxSize = Vector3.new(4, 6, 0),
-    Color = Color3.fromRGB(255, 170, 0),
+    Color = Color3.fromRGB(135, 206, 250),
     FaceCamera = false,
     Names = true,
     TeamColor = true,
@@ -18,12 +18,13 @@ local ESP = {
 }
 
 -- Declarations --
-local cam
+local cam = workspace.CurrentCamera
 local plrs = game:GetService("Players")
 local plr = plrs.LocalPlayer
 local mouse = plr:GetMouse()
 
 local V3new = Vector3.new
+local WorldToViewportPoint = cam.WorldToViewportPoint
 
 -- Functions --
 local function Draw(obj, props)
@@ -195,10 +196,10 @@ function boxBase:Update()
     }
 
     if ESP.Boxes then
-        local TopLeft, Vis1 = cam:WorldToViewportPoint(locs.TopLeft.p)
-        local TopRight, Vis2 = cam:WorldToViewportPoint(locs.TopRight.p)
-        local BottomLeft, Vis3 = cam:WorldToViewportPoint(locs.BottomLeft.p)
-        local BottomRight, Vis4 = cam:WorldToViewportPoint(locs.BottomRight.p)
+        local TopLeft, Vis1 = WorldToViewportPoint(cam, locs.TopLeft.p)
+        local TopRight, Vis2 = WorldToViewportPoint(cam, locs.TopRight.p)
+        local BottomLeft, Vis3 = WorldToViewportPoint(cam, locs.BottomLeft.p)
+        local BottomRight, Vis4 = WorldToViewportPoint(cam, locs.BottomRight.p)
 
         if self.Components.Quad then
             if Vis1 or Vis2 or Vis3 or Vis4 then
@@ -217,7 +218,7 @@ function boxBase:Update()
     end
 
     if ESP.Names then
-        local TagPos, Vis5 = cam:WorldToViewportPoint(locs.TagPos.p)
+        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
         
         if Vis5 then
             self.Components.Name.Visible = true
@@ -239,7 +240,7 @@ function boxBase:Update()
     end
     
     if ESP.Tracers then
-        local TorsoPos, Vis6 = cam:WorldToViewportPoint(locs.Torso.p)
+        local TorsoPos, Vis6 = WorldToViewportPoint(cam, locs.Torso.p)
 
         if Vis6 then
             self.Components.Tracer.Visible = true
