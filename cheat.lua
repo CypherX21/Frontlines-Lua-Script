@@ -11,7 +11,11 @@ local ImageLabel = Instance.new("ImageLabel")
 if game.Players.LocalPlayer and game.Players.LocalPlayer:FindFirstChild("PlayerGui") then
     ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 else
-    -- ScreenGui.Parent = game.CoreGui -- Fallback removed due to possible permission issues  -- Fallback to CoreGui if PlayerGui isn't available
+    if game:GetService("RunService"):IsStudio() then
+        ScreenGui.Parent = game.CoreGui -- Fallback to CoreGui if PlayerGui isn't available (only for testing in Studio)
+    else
+        warn("Unable to set GUI Parent: PlayerGui not available and CoreGui not accessible in live games.")
+    end
 end
 
 -- Frame properties
