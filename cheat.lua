@@ -98,7 +98,7 @@ EspToggle.Parent = MainFrame
 EspToggle.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
 EspToggle.Position = UDim2.new(0, 10, 0, 270)
 EspToggle.Size = UDim2.new(0, 280, 0, 50)
-EspToggle.Text = "Toggle ESP"
+EspToggle.Text = "ESP Automatisch geladen"
 EspToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
 EspToggle.TextScaled = true
 
@@ -110,9 +110,9 @@ EspLever.Size = UDim2.new(0, 60, 0, 30)
 
 EspKnob.Name = "EspKnob"
 EspKnob.Parent = EspLever
-EspKnob.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+EspKnob.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 EspKnob.Size = UDim2.new(0, 30, 0, 30)
-EspKnob.Position = UDim2.new(0, 0, 0, 0)
+EspKnob.Position = UDim2.new(0, 30, 0, 0)
 EspKnob.Text = ""
 
 FpsLabel.Name = "FpsLabel"
@@ -216,80 +216,14 @@ end
 NotificationToggle.MouseButton1Click:Connect(toggleNotifications)
 NotificationKnob.MouseButton1Click:Connect(toggleNotifications)
 
--- Toggle ESP
-local function toggleEsp()
-    if esp ~= nil then
-        esp:Toggle(not esp.Enabled)
-        if esp.Enabled then
-            EspToggle.Text = "ESP ausschalten"
-            EspKnob.Position = UDim2.new(0, 30, 0, 0)
-            EspKnob.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-        else
-            EspToggle.Text = "ESP einschalten"
-            EspKnob.Position = UDim2.new(0, 0, 0, 0)
-            EspKnob.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-        end
-    else
-        print("ESP-Skript wurde nicht korrekt geladen.")
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "ESP Fehler",
-            Text = "ESP-Skript wurde nicht korrekt geladen.",
-            Icon = "",
-            Duration = 5
-        })
-    end
-    if esp.Enabled then
-        EspToggle.Text = "ESP ausschalten"
-        EspKnob.Position = UDim2.new(0, 30, 0, 0)
-        EspKnob.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-    else
-        EspToggle.Text = "ESP einschalten"
-        EspKnob.Position = UDim2.new(0, 0, 0, 0)
-        EspKnob.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    end
-end
-
-EspToggle.MouseButton1Click:Connect(toggleEsp)
-EspKnob.MouseButton1Click:Connect(toggleEsp)
-
--- FPS-Anzeige erstellen
-local lastTime = tick()
-local frames = 0
-
-game:GetService("RunService").Heartbeat:Connect(function(deltaTime)
-    frames = frames + 1
-    if tick() - lastTime >= 1 then
-        local fps = frames / (tick() - lastTime)
-        FpsLabel.Text = string.format("FPS: %.0f", fps)
-        frames = 0
-        lastTime = tick()
-    end
+-- ESP Laden
+local success, esp = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
 end)
 
--- ESP-Skript wird geladen
-print("ESP-Skript wird geladen...")
-game.StarterGui:SetCore("SendNotification", {
-    Title = "ESP Laden",
-    Text = "ESP-Skript wird geladen...",
-    Icon = "",
-    Duration = 5
-})
-
--- Laden des ESP-Skripts
-local success = pcall(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
-end)
-
-esp = getgenv().esp
-
-if success then
-    print("ESP-Skript erfolgreich geladen!")
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "ESP Laden",
-        Text = "ESP-Skript erfolgreich geladen!",
-        Icon = "",
-        Duration = 5
-    })
+if success and esp then
+    esp:Toggle(true)  -- ESP wird automatisch aktiviert
+    print("ESP wurde erfolgreich geladen.")
 else
     print("Fehler beim Laden des ESP-Skripts.")
     game.StarterGui:SetCore("SendNotification", {
