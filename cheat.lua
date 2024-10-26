@@ -218,7 +218,26 @@ NotificationKnob.MouseButton1Click:Connect(toggleNotifications)
 
 -- Toggle ESP
 local function toggleEsp()
-    esp:Toggle(not esp.Enabled)
+    if esp ~= nil then
+        esp:Toggle(not esp.Enabled)
+        if esp.Enabled then
+            EspToggle.Text = "ESP ausschalten"
+            EspKnob.Position = UDim2.new(0, 30, 0, 0)
+            EspKnob.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        else
+            EspToggle.Text = "ESP einschalten"
+            EspKnob.Position = UDim2.new(0, 0, 0, 0)
+            EspKnob.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        end
+    else
+        print("ESP-Skript wurde nicht korrekt geladen.")
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "ESP Fehler",
+            Text = "ESP-Skript wurde nicht korrekt geladen.",
+            Icon = "",
+            Duration = 5
+        })
+    end
     if esp.Enabled then
         EspToggle.Text = "ESP ausschalten"
         EspKnob.Position = UDim2.new(0, 30, 0, 0)
@@ -257,9 +276,11 @@ game.StarterGui:SetCore("SendNotification", {
 })
 
 -- Laden des ESP-Skripts
-local success, esp = pcall(function()
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
+local success = pcall(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/CypherX21/Frontlines-Lua-Script/main/esp.lua"))()
 end)
+
+esp = getgenv().esp
 
 if success then
     print("ESP-Skript erfolgreich geladen!")
